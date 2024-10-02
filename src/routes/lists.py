@@ -1,5 +1,7 @@
 import flask
 
+from utils import auth
+
 ROUTES = flask.Blueprint('lists', __name__, url_prefix='/user/api')
 
 
