@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "flask-ts-template"
+version = "0.1.0"
+description = ""
+authors = ["gustavo <gustavo.passarella@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = {extras = ["email"], version = ">=2.7.1"}
+cachetools = ">=5.3.1"
+gunicorn = ">=20.1.0"
+Flask = "^3.0.3"
+
+[tool.poetry.dev-dependencies]
+isort = {extras = ["pyproject"], version = ">=5.6.4"}
+yapf = {extras = ["pyproject"], version = ">=0.32.0"}
+pytype = ">=2021.6.17"
+pytest = ">=7.2.1"
+responses = ">=0.22.0"
+setuptools = ">=67.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.yapf]
+based_on_style = "google"
+indent_width = 2
+allow_split_before_dict_value = false
+indent_dictionary_value = true
+
+[tool.isort]
+profile = "google"
+line_length = 1000
+skip_glob = [
+    "**/node_modules/**",
+    "*.pyi",
+]
+known_third_party = [
+    "flask",
+]
+
+[tool.yapfignore]
+ignore_patterns = [
+  "**/node_modules/**",
+]

@@ -1,0 +1,32 @@
+# General files to ignore.
+.DS_Store
+
+# Python files to ignore.
+*.pyc
+.idea/
+
+# Node/npm files to ignore.
+node_modules
+npm-debug.log
+npm-debug.log*
+
+# Test coverage files to ignore
+/coverage
+
+# Scaffold files to ignore.
+/env.development.yaml
+/.bracket_cache
+/.bracket_cache*
+/dist
+/.tmp
+
+# Catch all for minified asset file extensions.
+*.min.js
+*.js.map
+*.min.css
+
+# VSCode settings
+.vscode/settings.json
+
+# Service account credentials for Budou filter to run/build site locally.
+budou-credentials.json
