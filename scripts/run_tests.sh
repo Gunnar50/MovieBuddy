@@ -7,4 +7,4 @@ set -o errexit   # Fail on any error
 set -o pipefail  # Trace ERR through pipes
 set -o errtrace  # Trace ERR through sub-shell commands
 
- ../scripts/poetry_run.sh pytest --disable-warnings $@
+./scripts/poetry_run.sh pytest --disable-warnings $@
