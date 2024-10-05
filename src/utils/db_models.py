@@ -17,9 +17,7 @@ class Watchlist(TrackedModel):
   created_by = ndb.IntegerProperty(required=True) # User id
   items = ndb.KeyProperty(Media, required=True) # Array?
   watched_items = ndb.KeyProperty(Media, required=True) # Array?
-  ticket_allocation = ndb.StringProperty(required=True)
-  last_nominee_imported_at = ndb.DateTimeProperty()
-
+  
   total_members = ndb.IntegerProperty(default=0)
   is_public = ndb.BooleanProperty(default=False)
 

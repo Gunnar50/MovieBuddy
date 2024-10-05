@@ -5,7 +5,7 @@
   "author": "Gustavo Passarella",
   "license": "ISC",
   "scripts": {
-    "dev": "concurrently \"npm run webpack:watch\" \"gulp sass-watch\" \"poetry run python src/main.py\" --raw --kill-others",
+    "dev": "concurrently \"npm run webpack:watch\" \"gulp sass-watch\" \"poetry run python main.py\" --raw --kill-others",
     "webpack:watch": "webpack --watch",
     "lint": "eslint src/ts --ext .ts",
     "fix:fe": "npm-run-all fix:*",
