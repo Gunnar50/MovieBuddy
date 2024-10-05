@@ -1,4 +1,5 @@
 import flask
+from src.utils import constants
 
 
 def create_app() -> flask.Flask:
@@ -16,3 +17,6 @@ def register_routes(flask_app: flask.Flask):
 
 app = create_app()
 register_routes(app)
+
+# For running concurrently (not through dev_appserver.py)
+# app.run(debug=True)

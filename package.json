@@ -5,7 +5,7 @@
   "author": "Gustavo Passarella",
   "license": "ISC",
   "scripts": {
-    "dev": "concurrently \"npm run webpack:watch\" \"gulp sass-watch\" \"poetry run python main.py\" --raw --kill-others",
+    "dev": "concurrently \"npm run webpack:watch\" \"gulp sass-watch\" \"GAE_ENV=localdev poetry run python main.py\" --raw --kill-others",
     "webpack:watch": "webpack --watch",
     "lint": "eslint src/ts --ext .ts",
     "fix:fe": "npm-run-all fix:*",
@@ -17,7 +17,6 @@
     "lint:ts:src": "gts lint 'src/**/*.ts'",
     "lint:fix": "eslint src/ts --ext .ts --fix",
     "lint:all": "npm-run-all lint:*",
-
     "check:imports": "./scripts/check_imports.sh --check-only",
     "check:style": "./scripts/check_style.sh --diff",
     "check:types": "./scripts/check_types.sh .",
@@ -27,7 +26,8 @@
     "fix:be": "npm-run-all fix:be:*",
     "poetry:install": "./scripts/poetry_install.sh",
     "poetry:update": "./scripts/poetry_update.sh",
-    "test": "./scripts/run_tests.sh"
+    "test": "./scripts/run_tests.sh",
+    "serve": "./scripts/run_serve.sh"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.14.1",
