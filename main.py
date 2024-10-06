@@ -19,4 +19,5 @@ app = create_app()
 register_routes(app)
 
 # For running concurrently (not through dev_appserver.py)
-# app.run(debug=True)
+if constants.LOCAL_DEV:
+  app.run(debug=True)
