@@ -1,7 +1,9 @@
 import dataclasses
 import functools
 
-from utils import exceptions
+from src.utils import exceptions
+
+SECRET_ID = 'oauth-client-config'
 
 
 @dataclasses.dataclass
