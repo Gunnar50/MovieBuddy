@@ -3,8 +3,6 @@ import functools
 
 from src.utils import exceptions
 
-SECRET_ID = 'oauth-client-config'
-
 
 @dataclasses.dataclass
 class UserMeta:
