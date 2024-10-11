@@ -1,5 +1,7 @@
 import flask
 
+from src.utils import db_models
+
 ROUTES = flask.Blueprint('general', __name__)
 
 
@@ -10,5 +12,12 @@ def warmup() -> str:
 
 
 @ROUTES.route('/')
-def home():
+def home() -> str:
+  return flask.render_template('index.html')
+
+
+@ROUTES.route('/add')
+def test_route() -> str:
+  user = db_models.User(email_address='test@test.com').put()
+
   return flask.render_template('index.html')
