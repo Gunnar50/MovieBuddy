@@ -1,9 +1,4 @@
-import enum
-
 from google.appengine.ext import ndb
-import pydantic
-
-from utils import api
 
 
 class TrackedModel(ndb.Model):
@@ -11,17 +6,16 @@ class TrackedModel(ndb.Model):
   modified_at = ndb.DateTimeProperty(auto_now=True)
 
 
-class Watchlist(TrackedModel):
-  name = ndb.StringProperty(required=True)
-  description = ndb.StringProperty(required=True)
-  created_by = ndb.IntegerProperty(required=True)  # User id
-  items = ndb.KeyProperty(Media, required=True)  # Array?
-  watched_items = ndb.KeyProperty(Media, required=True)  # Array?
-  image = ndb.StringProperty()
+# class Watchlist(TrackedModel):
+#   name = ndb.StringProperty(required=True)
+#   description = ndb.StringProperty(required=True)
+#   created_by = ndb.IntegerProperty(required=True)  # User id
+#   items = ndb.KeyProperty(Media, required=True)  # Array?
+#   watched_items = ndb.KeyProperty(Media, required=True)  # Array?
+#   image = ndb.StringProperty()
 
-  total_members = ndb.IntegerProperty(default=0)
-  is_public = ndb.BooleanProperty(default=False)
-
+#   total_members = ndb.IntegerProperty(default=0)
+#   is_public = ndb.BooleanProperty(default=False)
 
 # - Name: string
 # - description: string
@@ -35,4 +29,4 @@ class Watchlist(TrackedModel):
 
 class User(TrackedModel):
   email_address = ndb.StringProperty(required=True)
-  watchlist = ndb.KeyProperty(Watchlist, required=True)  # Array?
+  # watchlist = ndb.KeyProperty(Watchlist, required=True)  # Array?
