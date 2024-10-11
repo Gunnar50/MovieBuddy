@@ -19,5 +19,5 @@ def home() -> str:
 @ROUTES.route('/add')
 def test_route() -> str:
   user = db_models.User(email_address='test@test.com').put()
-
+  print(user)
   return flask.render_template('index.html')

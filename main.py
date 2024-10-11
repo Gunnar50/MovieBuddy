@@ -1,11 +1,13 @@
 import flask
 from src.utils import constants
+from google.appengine.api import wrap_wsgi_app
 
 
 def create_app() -> flask.Flask:
   flask_app = flask.Flask(__name__,
                           template_folder='src/templates',
                           static_folder='src/static/compiled')
+  flask_app.wsgi_app = wrap_wsgi_app(flask_app.wsgi_app)
   return flask_app
 
 
