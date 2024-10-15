@@ -1,7 +1,15 @@
 import dataclasses
 import functools
 
+from flask import json
+
 from src.utils import exceptions
+from src.utils import db_models
+from google.oauth2 import id_token
+
+from google.auth.transport import requests
+from src.utils import constants
+from src.utils.services import secrets
 
 
 @dataclasses.dataclass
@@ -36,7 +44,7 @@ def requires_watchlist(func):
     user_meta = get_user_meta()
 
     # Get the list & event
-    watchlist = db_models.Watchlist_.get_by_id(kwargs['list_id'])
+    watchlist = db_models.Watchlist.get_by_id(kwargs['list_id'])
     if not watchlist:
       raise exceptions.EntityNotFoundException
 
@@ -63,3 +71,31 @@ def get_user_meta() -> UserMeta:
       email=email,
       name=nickname,
   )
+
+
+@dataclasses.dataclass
+class UserInfo:
+  id: str
+  email_address: str
+  name: str
+
+
+def get_client_id() -> str:
+  client_config = json.loads(secrets.get_secret(constants.SECRET_ID))
+  return client_config['web']['client_id']
+
+
+def login(token: str) -> UserInfo:
+  client_id = get_client_id()
+  try:
+    id_info = id_token.verify_token(token,
+                                    requests.Request(),
+                                    audience=client_id)
+
+    # Token is valid; extract user information
+    user_info = UserInfo(id=id_info['sub'],
+                         email_address=id_info['email'],
+                         name=id_info.get('name'))
+    return user_info
+  except Exception:
+    raise exceptions.EntityNotFound

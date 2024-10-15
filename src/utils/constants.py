@@ -1,6 +1,7 @@
 import os
 
 SECRET_ID = 'client-config'
+SESSION_USER_ID = 'user_id'
 
 GAE_PROJECT = os.getenv('GOOGLE_CLOUD_PROJECT')
 GAE_ENV = os.environ.get('GAE_ENV')
