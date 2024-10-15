@@ -6,27 +6,21 @@ class TrackedModel(ndb.Model):
   modified_at = ndb.DateTimeProperty(auto_now=True)
 
 
-# class Watchlist(TrackedModel):
-#   name = ndb.StringProperty(required=True)
-#   description = ndb.StringProperty(required=True)
-#   created_by = ndb.IntegerProperty(required=True)  # User id
-#   items = ndb.KeyProperty(Media, required=True)  # Array?
-#   watched_items = ndb.KeyProperty(Media, required=True)  # Array?
-#   image = ndb.StringProperty()
-
-#   total_members = ndb.IntegerProperty(default=0)
-#   is_public = ndb.BooleanProperty(default=False)
-
-# - Name: string
-# - description: string
-# - created_by: string (user id)
-# - shared: list of user ids
-# - items: list of media ids
-# - watched_Items: list of media ids
-# - image: string (optional)
-# - Public: boolean (default to false) (future)
-
-
 class User(TrackedModel):
+  name = ndb.StringProperty(required=True)
   email_address = ndb.StringProperty(required=True)
-  # watchlist = ndb.KeyProperty(Watchlist, required=True)  # Array?
+
+
+class Watchlist(TrackedModel):
+  title = ndb.StringProperty(required=True)
+  description = ndb.StringProperty(required=True)
+  # User id
+  created_by = ndb.KeyProperty(User, required=True)
+  shared_users = ndb.KeyProperty(User, repeated=True)
+  # IDs from the movie api
+  items = ndb.StringProperty(repeated=True)
+  watched_items = ndb.StringProperty(repeated=True)
+
+  # Future?
+  image = ndb.StringProperty()
+  is_public = ndb.BooleanProperty(default=False)
