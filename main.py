@@ -13,8 +13,10 @@ def create_app() -> flask.Flask:
 
 def register_routes(flask_app: flask.Flask):
   from src.routes import general
+  from src.routes import auth
 
   flask_app.register_blueprint(general.ROUTES)
+  flask_app.register_blueprint(auth.ROUTES)
 
 
 app = create_app()
