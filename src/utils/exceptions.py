@@ -20,3 +20,8 @@ class NotAuthenticatedException(exceptions.HTTPException):
 class EntityNotInListException(exceptions.HTTPException):
   code = HTTPStatus.CONFLICT
   description = 'Entity not found in list'
+
+
+class InvalidAuthenticationException(exceptions.HTTPException):
+  code = HTTPStatus.FORBIDDEN
+  description = 'Failed validation.'
