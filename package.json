@@ -6,6 +6,7 @@
   "license": "ISC",
   "scripts": {
     "dev": "concurrently \"npm run webpack:watch\" \"gulp sass-watch\" \"LOCAL_DEV=true poetry run python main.py\" --raw --kill-others",
+    "deploy": "gcloud app deploy",
     "webpack:watch": "webpack --watch",
     "lint": "eslint src/ts --ext .ts",
     "fix:fe": "npm-run-all fix:*",
