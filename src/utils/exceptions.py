@@ -2,7 +2,7 @@ from http import HTTPStatus
 from werkzeug import exceptions
 
 
-class EntityNotFound(exceptions.HTTPException):
+class EntityNotFoundException(exceptions.HTTPException):
   code = HTTPStatus.NOT_FOUND
   description = 'Entity not found.'
 
@@ -25,3 +25,9 @@ class EntityNotInListException(exceptions.HTTPException):
 class InvalidAuthenticationException(exceptions.HTTPException):
   code = HTTPStatus.FORBIDDEN
   description = 'Failed validation.'
+
+
+class NoAccessException(exceptions.HTTPException):
+  """Raised when the user does not have access to this resource."""
+  code = HTTPStatus.FORBIDDEN
+  description = 'No access to this resource.'
