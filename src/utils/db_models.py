@@ -24,3 +24,13 @@ class Watchlist(TrackedModel):
   # Future?
   image = ndb.StringProperty()
   is_public = ndb.BooleanProperty(default=False)
+
+
+class WatchlistOwner(TrackedModel):
+  email = ndb.StringProperty(required=True)
+  watchlist = ndb.KeyProperty(Watchlist, required=True)
+
+
+class WatchlistMember(TrackedModel):
+  email = ndb.StringProperty(required=True)
+  watchlist = ndb.KeyProperty(Watchlist, required=True)
