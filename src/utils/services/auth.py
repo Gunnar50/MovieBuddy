@@ -1,4 +1,5 @@
 import dataclasses
+import enum
 import functools
 
 from flask import json
@@ -6,7 +7,7 @@ from flask import json
 from src.utils import exceptions
 from src.utils import db_models
 from google.oauth2 import id_token
-
+from google.appengine.api import users
 from google.auth.transport import requests
 from src.utils import constants
 from src.utils.services import secrets
@@ -16,13 +17,21 @@ from src.utils.services import secrets
 class UserMeta:
   id: str
   name: str
-  email_address: str
+  email: str
+  is_owner: bool
+  is_member: bool
+
+
+class UserMetaType(enum.Enum):
+  OWNER = 'owner'
+  MEMBER = 'member'
+  NONE = 'none'
 
 
 @dataclasses.dataclass
 class WatchlistMeta:
-  name: str
   user_meta: UserMeta
+  watchlist: db_models.Watchlist
 
 
 def requires_user(func):
@@ -36,26 +45,33 @@ def requires_user(func):
   return inner
 
 
-def requires_watchlist(func):
-  # List must exist & user must have access
+def requires_watchlist(user_types: tuple[UserMetaType, ...] = (
+    UserMetaType.OWNER,
+    UserMetaType.MEMBER,
+)):
 
-  @functools.wraps(func)
-  def inner(*args, **kwargs):
-    user_meta = get_user_meta()
+  def requires_watchlist_wrapper(func):
+    # Watchlist must exist & user must have access
 
-    # Get the list & event
-    watchlist = db_models.Watchlist.get_by_id(kwargs['list_id'])
-    if not watchlist:
-      raise exceptions.EntityNotFoundException
+    @functools.wraps(func)
+    def inner(*args, **kwargs):
+      user_meta = get_user_meta()
 
-    # Check the user has access
-    if user_type in user_types:
-      list_meta = WatchlistMeta(user_meta=user_meta, event=event, list_=list_)
-      return func(list_meta=list_meta, *args, **kwargs)
-    else:
-      raise exceptions.NoAccessException
+      # Get the list & event
+      watchlist = db_models.Watchlist.get_by_id(kwargs['list_id'])
+      if not watchlist:
+        raise exceptions.EntityNotFoundException
 
-  return inner
+      user_type = _get_user_type(user_meta, watchlist)
+      if user_type in user_types:
+        list_meta = WatchlistMeta(user_meta=user_meta, watchlist=watchlist)
+        return func(list_meta=list_meta, *args, **kwargs)
+      else:
+        raise exceptions.NoAccessException
+
+    return inner
+
+  return requires_watchlist_wrapper
 
 
 def get_user_meta() -> UserMeta:
@@ -66,11 +82,44 @@ def get_user_meta() -> UserMeta:
 
   email = current_user.email()
 
+  # Check the user own or is a member of the list
+  is_owner = db_models.WatchlistOwner.query(
+      db_models.WatchlistOwner.email == email).count() > 0
+
+  is_member = db_models.WatchlistOwner.query(
+      db_models.WatchlistOwner.email == email).count() > 0
+
   return UserMeta(
       id=current_user.user_id(),
+      name=current_user.nickname,
       email=email,
-      name=nickname,
+      is_owner=is_owner,
+      is_member=is_member,
   )
+
+
+def _get_user_type(
+    user_meta: UserMeta,
+    watchlist: db_models.Watchlist,
+) -> UserMetaType:
+  if user_meta.is_owner:
+    # Check if this user is a owner of this watchlist
+    is_list_owner = db_models.WatchlistOwner.query(
+        db_models.WatchlistOwner.email == user_meta.email,
+        db_models.WatchlistOwner.watchlist == watchlist.key).count() > 0
+    if is_list_owner:
+      return UserMetaType.OWNER
+
+  if user_meta.is_member:
+    # Check if this user is a member of this watchlist
+    is_list_member = db_models.WatchlistMember.query(
+        db_models.WatchlistMember.email == user_meta.email,
+        db_models.WatchlistMember.watchlist == watchlist.key).count() > 0
+    if is_list_member:
+      return UserMetaType.MEMBER
+
+  # No access
+  return UserMetaType.NONE
 
 
 @dataclasses.dataclass
@@ -98,4 +147,4 @@ def login(token: str) -> UserInfo:
                          name=id_info.get('name'))
     return user_info
   except Exception:
-    raise exceptions.EntityNotFound
+    raise exceptions.EntityNotFoundException
