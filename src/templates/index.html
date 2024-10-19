@@ -6,14 +6,19 @@
     <title>Flask TypeScript SASS Project</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='compiled/index.min.css') }}"
+      href="{{ url_for('static', filename='index.min.css') }}"
     />
     <script
-      src="{{ url_for('static', filename='compiled/bundle.min.js') }}"
+      src="{{ url_for('static', filename='bundle.min.js') }}"
       defer
     ></script>
   </head>
   <body>
     <h1>Hello, World!</h1>
+    <h1>Welcome, {{ name }}!</h1>
+    <p>You are now logged in.</p>
+    <form action="/user/api/auth/logout" method="POST">
+        <button type="submit">Logout</button>
+    </form>
   </body>
 </html>

@@ -22,7 +22,7 @@ def home() -> str:
 def logged_in():
   # Check if user is logged in
   if 'user_id' not in flask.session:
-    return flask.redirect(flask.url_for('index'))
+    return flask.redirect(flask.url_for('general.home'))
 
   return flask.render_template("index.html", name=flask.session['name'])
 
