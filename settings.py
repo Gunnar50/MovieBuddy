@@ -39,11 +39,6 @@ CSP_POLICY = {
     ],
 }
 
-# Angular
-CSP_POLICY['img-src'] += ['data:']
-CSP_POLICY['script-src'] += [UNSAFE_INLINE]
-CSP_POLICY['style-src'] += [UNSAFE_INLINE]
-
 # GA4 / GTM
 # Google domains taken from https://www.google.com/supported_domains
 GOOGLE_TLDs = ('com', 'ad', 'ae', 'af', 'ag', 'al', 'am', 'ao', 'ar', 'as',
