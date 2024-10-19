@@ -15,6 +15,9 @@
 runtime: python311
 app_engine_apis: true
 
+env_variables:
+  FLASK_SETTINGS_FILENAME: "settings.py"
+
 handlers:
   # This configures Google App Engine to serve the files in the app's static
   # directory.
