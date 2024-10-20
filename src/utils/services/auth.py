@@ -64,8 +64,8 @@ def requires_watchlist(user_types: tuple[UserMetaType, ...] = (
 
       user_type = _get_user_type(user_meta, watchlist)
       if user_type in user_types:
-        list_meta = WatchlistMeta(user_meta=user_meta, watchlist=watchlist)
-        return func(list_meta=list_meta, *args, **kwargs)
+        watchlist_meta = WatchlistMeta(user_meta=user_meta, watchlist=watchlist)
+        return func(list_meta=watchlist_meta, *args, **kwargs)
       else:
         raise exceptions.NoAccessException
 

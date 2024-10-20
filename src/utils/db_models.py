@@ -14,9 +14,6 @@ class User(TrackedModel):
 class Watchlist(TrackedModel):
   title = ndb.StringProperty(required=True)
   description = ndb.StringProperty(required=True)
-  # User id
-  created_by = ndb.KeyProperty(User, required=True)
-  shared_users = ndb.KeyProperty(User, repeated=True)
   # IDs from the movie api
   items = ndb.StringProperty(repeated=True)
   watched_items = ndb.StringProperty(repeated=True)
