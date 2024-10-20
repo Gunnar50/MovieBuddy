@@ -14,10 +14,8 @@ npm-debug.log*
 /coverage
 
 # Scaffold files to ignore.
+.env
 /env.development.yaml
-/.bracket_cache
-/.bracket_cache*
-/dist
 /.tmp
 
 # Catch all for minified asset file extensions.
