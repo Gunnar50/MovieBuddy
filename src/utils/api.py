@@ -13,12 +13,6 @@ class MemberDetail(pydantic.BaseModel):
   member_type: MemberType
 
 
-class ListInfo(pydantic.BaseModel):
-  name: str
-  owner_id: int
-  shared: list[MemberDetail]
-
-
 class WatchlistDetail(pydantic.BaseModel):
   watchlist_id: int
   title: str
@@ -31,8 +25,8 @@ class WatchlistResponse(pydantic.BaseModel):
   members: list[MemberDetail]
 
 
-class ListsInfo(pydantic.BaseModel):
-  lists: list[ListInfo]
+class UserWatchlistsInfo(pydantic.BaseModel):
+  watchlists: list[WatchlistResponse]
 
 
 class ListCreateRequest(pydantic.BaseModel):
