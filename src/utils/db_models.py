@@ -13,10 +13,10 @@ class User(TrackedModel):
 
 class Watchlist(TrackedModel):
   title = ndb.StringProperty(required=True)
-  description = ndb.StringProperty(required=True)
+  description = ndb.StringProperty(required=True, default='')
   # IDs from the movie api
-  items = ndb.StringProperty(repeated=True)
-  watched_items = ndb.StringProperty(repeated=True)
+  items = ndb.IntegerProperty(repeated=True)
+  watched_items = ndb.IntegerProperty(repeated=True)
 
   # Future?
   image = ndb.StringProperty()
