@@ -9,7 +9,7 @@ class MemberType(enum.Enum):
 
 class MemberDetail(pydantic.BaseModel):
   name: str
-  email_address: str
+  email: str
   member_type: MemberType
 
 
@@ -23,6 +23,12 @@ class WatchlistDetail(pydantic.BaseModel):
   watchlist_id: int
   title: str
   description: str
+
+
+class WatchlistResponse(pydantic.BaseModel):
+  watchlist: WatchlistDetail
+  owner: MemberDetail
+  members: list[MemberDetail]
 
 
 class ListsInfo(pydantic.BaseModel):
