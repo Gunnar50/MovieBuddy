@@ -1,5 +1,11 @@
 from http import HTTPStatus
+import pydantic
 from werkzeug import exceptions
+
+
+class HttpExceptionWithBody(exceptions.HTTPException):
+  code: HTTPStatus
+  body: pydantic.BaseModel
 
 
 class EntityNotFoundException(exceptions.HTTPException):
