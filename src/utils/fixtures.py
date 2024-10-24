@@ -71,12 +71,17 @@ TEST_USER2 = UserData(id=100002, email='user_2@example.com', name='User 2')
 TEST_USER3 = UserData(id=100003, email='user_3@example.com', name='User 3')
 TEST_USER4 = UserData(id=100004, email='user_4@example.com', name='User 4')
 
+TEST_ITEM_ID1 = 1001
+TEST_ITEM_ID2 = 1002
+TEST_ITEM_ID3 = 1003
+TEST_ITEM_ID4 = 1004
+
 TEST_WATCHLIST1 = WatchlistData(
     id=200001,
     title='Test Watchlist 1',
     description='Description for Watchlist 1',
-    items=[1000, 1001, 1002, 1003],
-    watched_items=[1000, 1002],
+    items=[TEST_ITEM_ID1, TEST_ITEM_ID2, TEST_ITEM_ID3, TEST_ITEM_ID4],
+    watched_items=[TEST_ITEM_ID1, TEST_ITEM_ID3],
 )
 
 TEST_WATCHLIST2 = WatchlistData(
