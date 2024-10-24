@@ -1,4 +1,5 @@
-from utils import api, db_models
+from utils import api
+from utils import db_models
 
 
 def serialise_watchlist_details(

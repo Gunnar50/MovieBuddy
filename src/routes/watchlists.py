@@ -1,8 +1,13 @@
 import collections
+
 import flask
 from google.appengine.ext import ndb
-from utils import api, db_models
-from utils.services import auth, flask_helpers, serialisers
+
+from utils import api
+from utils import db_models
+from utils.services import auth
+from utils.services import flask_helpers
+from utils.services import serialisers
 
 ROUTES = flask.Blueprint('watchlists', __name__, url_prefix='/user/api')
 

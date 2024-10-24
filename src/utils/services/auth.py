@@ -3,13 +3,13 @@ import enum
 import functools
 
 from flask import json
-
-from src.utils import exceptions
-from src.utils import db_models
-from google.oauth2 import id_token
 from google.appengine.api import users
 from google.auth.transport import requests
+from google.oauth2 import id_token
+
 from src.utils import constants
+from src.utils import db_models
+from src.utils import exceptions
 from src.utils.services import secrets
 
 

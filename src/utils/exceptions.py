@@ -1,4 +1,5 @@
 from http import HTTPStatus
+
 import pydantic
 from werkzeug import exceptions
 
