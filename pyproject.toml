@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 appengine-python-standard = ">=1.1.6"
-pydantic = {extras = ["email"], version = ">=2.7.1"}
+pydantic = { extras = ["email"], version = ">=2.7.1" }
 cachetools = ">=5.3.1"
 google-cloud-logging = ">=3.11.2"
 google-cloud-secret-manager = ">=2.16.1"
@@ -22,10 +22,11 @@ setuptools = ">=67.4.0"
 google-cloud-storage = ">=2.12.0"
 
 [tool.poetry.dev-dependencies]
-isort = {extras = ["pyproject"], version = ">=5.6.4"}
-yapf = {extras = ["pyproject"], version = ">=0.32.0"}
+isort = { extras = ["pyproject"], version = ">=5.6.4" }
+yapf = { extras = ["pyproject"], version = ">=0.32.0" }
 pytype = ">=2021.6.17"
 pytest = ">=7.2.1"
+pytest-mock = ">=3.14.0"
 responses = ">=0.22.0"
 setuptools = ">=67.4.0"
 
@@ -42,15 +43,8 @@ indent_dictionary_value = true
 [tool.isort]
 profile = "google"
 line_length = 1000
-skip_glob = [
-    "**/node_modules/**",
-    "*.pyi",
-]
-known_third_party = [
-    "flask",
-]
+skip_glob = ["**/node_modules/**", "*.pyi"]
+known_third_party = ["flask"]
 
 [tool.yapfignore]
-ignore_patterns = [
-  "**/node_modules/**",
-]
+ignore_patterns = ["**/node_modules/**"]
