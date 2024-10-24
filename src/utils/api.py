@@ -29,17 +29,17 @@ class UserWatchlistsInfo(pydantic.BaseModel):
   watchlists: list[WatchlistResponse]
 
 
-class ListCreateRequest(pydantic.BaseModel):
+class WatchlistCreateRequest(pydantic.BaseModel):
   name: str
   owner: str
   shared: list[int] = []  # List of user_id
 
 
-class ListUpdateRequest(pydantic.BaseModel):
+class WatchlistUpdateRequest(pydantic.BaseModel):
   name: str
 
 
-class ListRequest(pydantic.BaseModel):
+class WatchlistRequest(pydantic.BaseModel):
   item_id: int
 
 
