@@ -19,6 +19,7 @@ def home() -> str:
 
 
 @ROUTES.route("/logged_in")
+@auth.requires_user
 def logged_in():
   # Check if user is logged in
   if 'user_id' not in flask.session:
