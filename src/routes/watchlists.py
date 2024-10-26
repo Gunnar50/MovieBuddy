@@ -63,7 +63,7 @@ def list_all(user_meta: auth.UserMeta) -> api.UserWatchlistsInfo:
 
 
 @ROUTES.route('/list/<int:watchlist_id>')
-@auth.requires_watchlist(auth.UserMetaType.OWNER, auth.UserMetaType.MEMBER)
+@auth.requires_watchlist()
 def list_details(watchlist_meta: auth.WatchlistMeta):
   # Get specific watchlist
   owner = db_models.WatchlistOwner.query(

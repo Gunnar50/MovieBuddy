@@ -1,11 +1,20 @@
-import email
+from http import HTTPStatus
 import json
-from typing import NamedTuple, Optional
+from typing import Generator, NamedTuple, Optional
+from unittest import mock
+
+import flask
+from google.appengine.api import memcache
+from google.appengine.ext import ndb
+from google.appengine.ext import testbed
+from google.oauth2 import id_token
+import pydantic
 import pytest
 import pytest_mock
+
 from routes import watchlists
-from src.utils.services import secrets
-from utils import db_models
+from utils.services import secrets
+from utils import constants, db_models
 
 
 @pytest.fixture(autouse=True)
@@ -104,3 +113,29 @@ def create_test_lists() -> None:
   watchlist2 = TEST_WATCHLIST2.create()
   TEST_USER2.create_owner(watchlist2)
   TEST_USER1.create_member(watchlist2)
+
+
+@pytest.fixture(autouse=True)
+def mock_ndb() -> Generator:
+  _testbed = testbed.Testbed()
+  _testbed.activate()
+  _testbed.init_datastore_v3_stub()
+  _testbed.init_memcache_stub()
+  yield
+  _testbed.deactivate()
+
+
+@pytest.fixture
+def test_client() -> Generator[flask.testing.FlaskClient, None, None]:
+  import main
+  with main.app.test_client() as test_client:
+    yield test_client
+
+
+@pytest.fixture
+def test_login_client(
+    test_client: flask.testing.FlaskClient) -> flask.testing.FlaskClient:
+  # Simulate login a user by setting session data
+  with test_client.session_transaction() as session:
+    session[constants.SESSION_USER_ID] = TEST_USER1.id
+  return test_client

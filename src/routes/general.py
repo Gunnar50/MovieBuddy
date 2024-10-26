@@ -1,7 +1,7 @@
 import flask
 
-from src.utils import db_models
-from src.utils.services import auth
+from utils import db_models
+from utils.services import auth
 
 ROUTES = flask.Blueprint('general', __name__)
 

@@ -1,7 +1,7 @@
 import cachetools
 from google.cloud import secretmanager
 
-from src.utils import constants
+from utils import constants
 
 ONE_HOUR_IN_SECONDS = 60 * 60
 SECRET_CACHE = cachetools.TTLCache(maxsize=16384, ttl=ONE_HOUR_IN_SECONDS)

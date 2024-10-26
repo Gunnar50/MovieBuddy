@@ -5,9 +5,9 @@ import flask
 from google.auth.transport import requests
 from google.oauth2 import id_token
 
-from src.utils import constants
-from src.utils.services import auth
-from src.utils.services import secrets
+from utils import constants
+from utils.services import auth
+from utils.services import secrets
 
 ROUTES = flask.Blueprint('auth', __name__, url_prefix='/user/api/auth')
 
