@@ -76,6 +76,7 @@ def requires_watchlist(user_types: tuple[UserMetaType, ...] = (
 
 def get_user_meta() -> UserMeta:
   current_user = users.get_current_user()
+  print(f'{current_user=}')
 
   if not current_user:
     raise exceptions.NotAuthenticatedException

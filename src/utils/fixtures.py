@@ -1,6 +1,7 @@
+import functools
 from http import HTTPStatus
 import json
-from typing import Generator, NamedTuple, Optional
+from typing import Generator, NamedTuple, Optional, ParamSpec, TypeVar, Callable
 from unittest import mock
 
 import flask
@@ -55,6 +56,9 @@ class UserData(NamedTuple):
         watchlist=watchlist.key,
     ).put()
     return member
+
+  def _email(self) -> str:
+    return self.email
 
 
 class WatchlistData(NamedTuple):
@@ -116,26 +120,57 @@ def create_test_lists() -> None:
 
 
 @pytest.fixture(autouse=True)
-def mock_ndb() -> Generator:
+def mock_testbed() -> Generator:
   _testbed = testbed.Testbed()
   _testbed.activate()
   _testbed.init_datastore_v3_stub()
   _testbed.init_memcache_stub()
-  yield
+
+  yield _testbed
   _testbed.deactivate()
 
 
-@pytest.fixture
-def test_client() -> Generator[flask.testing.FlaskClient, None, None]:
+P = ParamSpec('P')
+R = TypeVar('R')
+
+
+class TestClientWrapper:
+
+  def __init__(self, test_client: 'flask.testing.FlaskClient',
+               testbed: testbed.Testbed) -> None:
+    self.test_client = test_client
+    self.logged_in = False
+    self.testbed = testbed
+
+    def _wrap(func: Callable[P, R]) -> Callable[P, R]:
+
+      @functools.wraps(wrapped=func)
+      def inner(*args: P.args, **kwargs: P.kwargs) -> R:
+        with test_client.session_transaction() as session:
+          if self.logged_in:
+            session[constants.SESSION_USER_ID] = TEST_USER1.id
+            with self.test_client.application.app_context():
+              self.testbed.setup_env(user_id=str(TEST_USER1.id),
+                                     user_email=TEST_USER1.email,
+                                     overwrite=True)
+        return func(*args, **kwargs)
+
+      return inner
+
+    self.get = _wrap(test_client.get)
+    self.post = _wrap(test_client.post)
+    self.put = _wrap(test_client.put)
+    self.delete = _wrap(test_client.delete)
+
+  def login(self) -> None:
+    self.logged_in = True
+
+  def logout(self) -> None:
+    self.logged_in = False
+
+
+@pytest.fixture()
+def test_client() -> Generator[TestClientWrapper, None, None]:
   import main
   with main.app.test_client() as test_client:
-    yield test_client
-
-
-@pytest.fixture
-def test_login_client(
-    test_client: flask.testing.FlaskClient) -> flask.testing.FlaskClient:
-  # Simulate login a user by setting session data
-  with test_client.session_transaction() as session:
-    session[constants.SESSION_USER_ID] = TEST_USER1.id
-  return test_client
+    yield TestClientWrapper(test_client)
