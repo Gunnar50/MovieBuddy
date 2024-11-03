@@ -1,7 +1,7 @@
 import functools
 from http import HTTPStatus
 import json
-from typing import Generator, NamedTuple, Optional, ParamSpec, TypeVar, Callable
+from typing import Callable, Generator, NamedTuple, Optional, ParamSpec, TypeVar
 from unittest import mock
 
 import flask
@@ -14,8 +14,9 @@ import pytest
 import pytest_mock
 
 from routes import watchlists
+from utils import constants
+from utils import db_models
 from utils.services import secrets
-from utils import constants, db_models
 
 
 @pytest.fixture(autouse=True)

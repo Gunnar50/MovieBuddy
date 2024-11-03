@@ -1,12 +1,14 @@
 from http import HTTPStatus
 import re
 from typing import Callable, Generator
-import flask
 from unittest import mock
 
-import pytest
+import flask
 from google.appengine.ext import testbed
-from utils import constants, fixtures
+import pytest
+
+from utils import constants
+from utils import fixtures
 from utils.services import auth
 
 TEST_URL_USER = 'http://localhost:8080/test/user/'
