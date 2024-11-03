@@ -3,8 +3,8 @@ import enum
 import functools
 from typing import Optional
 
-from flask import json
 import flask
+from flask import json
 from google.appengine.api import users
 from google.auth.transport import requests
 from google.oauth2 import id_token
@@ -20,6 +20,7 @@ class UserMeta:
   id: str
   name: str
   email: str
+  UserProfile: Optional[db_models.UserProfile]
   is_owner: bool
   is_member: bool
 
@@ -95,7 +96,9 @@ def get_user_meta(user_id: Optional[str],
     return None
 
 
-def _get_user_meta_required() -> Optional[UserMeta]:
+def _get_user_meta_required(user_id: str,
+                            user_email: Optional[str] = None
+                           ) -> Optional[UserMeta]:
 
   current_user = users.get_current_user()
 
@@ -146,9 +149,10 @@ def _get_user_type(
 
 @dataclasses.dataclass
 class UserInfo:
-  id: str
+  google_id: str
   email_address: str
   name: str
+  avatar: Optional[str]
 
 
 def get_client_id() -> str:
@@ -164,9 +168,10 @@ def login(token: str) -> UserInfo:
                                     audience=client_id)
 
     # Token is valid; extract user information
-    user_info = UserInfo(id=id_info['sub'],
+    user_info = UserInfo(google_id=id_info['sub'],
                          email_address=id_info['email'],
-                         name=id_info.get('name'))
+                         name=id_info.get('name'),
+                         avatar=id_info.get('picture'))
     return user_info
   except Exception:
     raise exceptions.EntityNotFoundException

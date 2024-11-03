@@ -7,7 +7,7 @@ class TrackedModel(ndb.Model):
 
 
 class UserProfile(TrackedModel):
-  google_id = ndb.StringProperty(required=True)
+  # ID is the user google id ('sub')
   email_address = ndb.StringProperty(required=True)
   name = ndb.StringProperty()
   avatar = ndb.StringProperty()

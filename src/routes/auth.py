@@ -1,26 +1,30 @@
-import os
-
-import cachetools
 import flask
-from google.auth.transport import requests
-from google.oauth2 import id_token
 
+from utils import api
 from utils import constants
+from utils import db_models
 from utils.services import auth
-from utils.services import secrets
+from utils.services import flask_helpers
 
 ROUTES = flask.Blueprint('auth', __name__, url_prefix='/user/api/auth')
 
 
 @ROUTES.route('/login', methods=('POST',))
+@flask_helpers.json_handler
 def login():
-  token = flask.request.json.get('token')
-  if not token:
-    return flask.jsonify({'error': 'No token provided'})
+  body, _ = flask_helpers.get_parameters(api.LoginRequest)
+  # token = flask.request.json.get('token')
+  user_info = auth.login(body.access_token)
 
-  user_info = auth.login(token)
-  flask.session[constants.SESSION_USER_ID] = user_info.id
-  flask.session['name'] = user_info.name
+  user_profile = db_models.UserProfile.get_by_id(user_info.google_id)
+  if not user_profile:
+    new_user = db_models.UserProfile(id=user_info.google_id,
+                                     email_address=user_info.email_address,
+                                     name=user_info.name,
+                                     avatar=user_info.avatar)
+    new_user.put()
+
+  flask.session[constants.SESSION_USER_ID] = user_info.google_id
 
   return flask.jsonify({
       "message": "Login successful",
