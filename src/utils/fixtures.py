@@ -136,8 +136,7 @@ R = TypeVar('R')
 
 class TestClientWrapper:
 
-  def __init__(self, test_client: 'flask.testing.FlaskClient',
-               testbed: testbed.Testbed) -> None:
+  def __init__(self, test_client: 'flask.testing.FlaskClient') -> None:
     self.test_client = test_client
     self.logged_in = False
     self.testbed = testbed
@@ -149,10 +148,7 @@ class TestClientWrapper:
         with test_client.session_transaction() as session:
           if self.logged_in:
             session[constants.SESSION_USER_ID] = TEST_USER1.id
-            with self.test_client.application.app_context():
-              self.testbed.setup_env(user_id=str(TEST_USER1.id),
-                                     user_email=TEST_USER1.email,
-                                     overwrite=True)
+
         return func(*args, **kwargs)
 
       return inner

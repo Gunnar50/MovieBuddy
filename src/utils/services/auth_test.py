@@ -15,9 +15,7 @@ TEST_URL_LIST_NONE = f'/test/requires_list/{fixtures.TEST_WATCHLIST1.id}/none/'
 
 
 @pytest.fixture()
-def test_auth_client(
-    mock_testbed: testbed.Testbed
-) -> Generator[fixtures.TestClientWrapper, None, None]:
+def test_auth_client() -> Generator[fixtures.TestClientWrapper, None, None]:
   import main
   app = main.create_app()
 
@@ -31,7 +29,7 @@ def test_auth_client(
             auth.requires_watchlist(user_types=()))
 
   with app.test_client() as test_client:
-    client_wrapper = fixtures.TestClientWrapper(test_client, mock_testbed)
+    client_wrapper = fixtures.TestClientWrapper(test_client)
 
     yield client_wrapper
 
