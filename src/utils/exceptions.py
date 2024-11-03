@@ -38,3 +38,9 @@ class NoAccessException(exceptions.HTTPException):
   """Raised when the user does not have access to this resource."""
   code = HTTPStatus.FORBIDDEN
   description = 'No access to this resource.'
+
+
+class MissingSessionCookieException(exceptions.HTTPException):
+  """Raised when the header is missing the session cookie for auth"""
+  code = HTTPStatus.FORBIDDEN
+  description = 'No session cookie found.'
