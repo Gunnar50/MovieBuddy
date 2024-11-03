@@ -48,7 +48,10 @@ def requires_user(func):
   return inner
 
 
-def requires_watchlist(user_types: tuple[UserMetaType, ...]):
+def requires_watchlist(user_types: tuple[UserMetaType, ...] = (
+    UserMetaType.OWNER,
+    UserMetaType.MEMBER,
+)):
 
   def requires_watchlist_wrapper(func):
     # Watchlist must exist & user must have access

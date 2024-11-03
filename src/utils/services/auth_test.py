@@ -27,8 +27,8 @@ def test_auth_client() -> Generator[fixtures.TestClientWrapper, None, None]:
     app.route(url)(decorator(func))
 
   add_route('/test/user/', auth.requires_user)
-  add_route('/test/requires_list/<int:list_id>/none/',
-            auth.requires_watchlist(user_types=()))
+  add_route('/test/requires_list/<int:watchlist_id>/none/',
+            auth.requires_watchlist())
 
   with app.test_client() as test_client:
     client_wrapper = fixtures.TestClientWrapper(test_client)
@@ -38,12 +38,10 @@ def test_auth_client() -> Generator[fixtures.TestClientWrapper, None, None]:
 
 class TestAuthDecorators:
 
-  @pytest.mark.parametrize(
-      'url, expected_status_code',
-      [
-          (TEST_URL_USER, HTTPStatus.OK),
-          # (TEST_URL_LIST_NONE, HTTPStatus.UNAUTHORIZED),
-      ])
+  @pytest.mark.parametrize('url, expected_status_code', [
+      (TEST_URL_USER, HTTPStatus.OK),
+      (TEST_URL_LIST_NONE, HTTPStatus.FORBIDDEN),
+  ])
   def test_user_nothing_exists(
       self,
       url: str,
@@ -51,6 +49,7 @@ class TestAuthDecorators:
       test_auth_client: fixtures.TestClientWrapper,
   ):
     test_auth_client.login()
+    fixtures.TEST_WATCHLIST1.create()
     response = test_auth_client.get(url)
 
     assert response.status_code == expected_status_code
