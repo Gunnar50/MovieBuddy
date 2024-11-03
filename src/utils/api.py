@@ -3,6 +3,10 @@ import enum
 import pydantic
 
 
+class LoginRequest(pydantic.BaseModel):
+  access_token: str
+
+
 class MemberType(enum.Enum):
   OWNER = 'owner'
   MEMBER = 'member'
