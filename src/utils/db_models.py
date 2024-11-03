@@ -6,9 +6,11 @@ class TrackedModel(ndb.Model):
   modified_at = ndb.DateTimeProperty(auto_now=True)
 
 
-class User(TrackedModel):
-  name = ndb.StringProperty(required=True)
+class UserProfile(TrackedModel):
+  google_id = ndb.StringProperty(required=True)
   email_address = ndb.StringProperty(required=True)
+  name = ndb.StringProperty()
+  avatar = ndb.StringProperty()
 
 
 class Watchlist(TrackedModel):
