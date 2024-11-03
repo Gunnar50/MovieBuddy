@@ -1,8 +1,10 @@
 import dataclasses
 import enum
 import functools
+from typing import Optional
 
 from flask import json
+import flask
 from google.appengine.api import users
 from google.auth.transport import requests
 from google.oauth2 import id_token
@@ -39,7 +41,8 @@ def requires_user(func):
 
   @functools.wraps(func)
   def inner(*args, **kwargs):
-    user_meta = get_user_meta()
+    user_id = _get_user_id()
+    user_meta = get_user_meta(user_id)
     return func(user_meta=user_meta, *args, **kwargs)
 
   return inner
@@ -74,16 +77,34 @@ def requires_watchlist(user_types: tuple[UserMetaType, ...] = (
   return requires_watchlist_wrapper
 
 
-def get_user_meta() -> UserMeta:
+def _get_user_id() -> str:
+  if user_id := flask.session.get(constants.SESSION_USER_ID):
+    return user_id
+  else:
+    raise exceptions.MissingSessionCookieException
+
+
+def get_user_meta(user_id: Optional[str],
+                  user_email: Optional[str] = None) -> Optional[UserMeta]:
+  if user_id:
+    try:
+      return _get_user_meta_required(user_id, user_email)
+    except exceptions.InvalidAuthenticationException:
+      return None
+  else:
+    return None
+
+
+def _get_user_meta_required() -> Optional[UserMeta]:
+
   current_user = users.get_current_user()
-  print(f'{current_user=}')
 
   if not current_user:
     raise exceptions.NotAuthenticatedException
 
   email = current_user.email()
 
-  # Check the user own or is a member of the list
+  # Check the user own and/or is a member of the list
   is_owner = db_models.WatchlistOwner.query(
       db_models.WatchlistOwner.email == email).count() > 0
 
