@@ -20,7 +20,6 @@ class UserMeta:
   id: str
   name: str
   email: str
-  UserProfile: Optional[db_models.UserProfile]
   is_owner: bool
   is_member: bool
 
@@ -49,27 +48,25 @@ def requires_user(func):
   return inner
 
 
-def requires_watchlist(user_types: tuple[UserMetaType, ...] = (
-    UserMetaType.OWNER,
-    UserMetaType.MEMBER,
-)):
+def requires_watchlist(user_types: tuple[UserMetaType, ...]):
 
   def requires_watchlist_wrapper(func):
     # Watchlist must exist & user must have access
 
     @functools.wraps(func)
     def inner(*args, **kwargs):
-      user_meta = get_user_meta()
+      user_id = _get_user_id()
+      user_meta = get_user_meta(user_id)
 
-      # Get the list & event
-      watchlist = db_models.Watchlist.get_by_id(kwargs['list_id'])
+      # Get the watchlist
+      watchlist = db_models.Watchlist.get_by_id(kwargs['watchlist_id'])
       if not watchlist:
         raise exceptions.EntityNotFoundException
 
       user_type = _get_user_type(user_meta, watchlist)
       if user_type in user_types:
         watchlist_meta = WatchlistMeta(user_meta=user_meta, watchlist=watchlist)
-        return func(list_meta=watchlist_meta, *args, **kwargs)
+        return func(watchlist_meta=watchlist_meta, *args, **kwargs)
       else:
         raise exceptions.NoAccessException
 
@@ -85,39 +82,26 @@ def _get_user_id() -> str:
     raise exceptions.MissingSessionCookieException
 
 
-def get_user_meta(user_id: Optional[str],
-                  user_email: Optional[str] = None) -> Optional[UserMeta]:
-  if user_id:
-    try:
-      return _get_user_meta_required(user_id, user_email)
-    except exceptions.InvalidAuthenticationException:
-      return None
-  else:
-    return None
+def get_user_meta(user_id: Optional[str]) -> UserMeta:
+  if not user_id:
+    raise exceptions.MissingSessionCookieException
 
+  user_profile = db_models.UserProfile.get_by_id(user_id)
+  if not user_profile:
+    logout()
+    raise exceptions.InvalidAuthenticationException
 
-def _get_user_meta_required(user_id: str,
-                            user_email: Optional[str] = None
-                           ) -> Optional[UserMeta]:
-
-  current_user = users.get_current_user()
-
-  if not current_user:
-    raise exceptions.NotAuthenticatedException
-
-  email = current_user.email()
-
-  # Check the user own and/or is a member of the list
+  # Check the user own and/or is a member of a list
   is_owner = db_models.WatchlistOwner.query(
-      db_models.WatchlistOwner.email == email).count() > 0
+      db_models.WatchlistOwner.email == user_profile.email_address).count() > 0
 
-  is_member = db_models.WatchlistOwner.query(
-      db_models.WatchlistOwner.email == email).count() > 0
+  is_member = db_models.WatchlistMember.query(
+      db_models.WatchlistMember.email == user_profile.email_address).count() > 0
 
   return UserMeta(
-      id=current_user.user_id(),
-      name=current_user.nickname,
-      email=email,
+      id=user_id,
+      name=user_profile.name,
+      email=user_profile.email_address,
       is_owner=is_owner,
       is_member=is_member,
   )
@@ -131,7 +115,7 @@ def _get_user_type(
     # Check if this user is a owner of this watchlist
     is_list_owner = db_models.WatchlistOwner.query(
         db_models.WatchlistOwner.email == user_meta.email,
-        db_models.WatchlistOwner.watchlist == watchlist.key).count() > 0
+        db_models.WatchlistOwner.watchlist == watchlist.key).get()
     if is_list_owner:
       return UserMetaType.OWNER
 
@@ -139,7 +123,7 @@ def _get_user_type(
     # Check if this user is a member of this watchlist
     is_list_member = db_models.WatchlistMember.query(
         db_models.WatchlistMember.email == user_meta.email,
-        db_models.WatchlistMember.watchlist == watchlist.key).count() > 0
+        db_models.WatchlistMember.watchlist == watchlist.key).get()
     if is_list_member:
       return UserMetaType.MEMBER
 
@@ -175,3 +159,7 @@ def login(token: str) -> UserInfo:
     return user_info
   except Exception:
     raise exceptions.EntityNotFoundException
+
+
+def logout() -> None:
+  flask.session.pop(constants.SESSION_USER_ID)
