@@ -40,6 +40,14 @@ class UserData(NamedTuple):
   email: str
   name: str
 
+  def create_profile(self):
+    user_profile = db_models.UserProfile(
+        id=self.id,
+        email_address=self.email,
+        name=self.name,
+    ).put()
+    return user_profile
+
   def create_owner(self,
                    watchlist: db_models.Watchlist) -> db_models.WatchlistOwner:
     owner = db_models.WatchlistOwner(
@@ -161,6 +169,7 @@ class TestClientWrapper:
 
   def login(self) -> None:
     self.logged_in = True
+    TEST_USER1.create_profile()
 
   def logout(self) -> None:
     self.logged_in = False
