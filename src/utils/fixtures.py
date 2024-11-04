@@ -45,7 +45,8 @@ class UserData(NamedTuple):
         id=self.id,
         email_address=self.email,
         name=self.name,
-    ).put()
+    )
+    user_profile.put()
     return user_profile
 
   def create_owner(self,
@@ -54,7 +55,8 @@ class UserData(NamedTuple):
         name=self.name,
         email=self.email,
         watchlist=watchlist.key,
-    ).put()
+    )
+    owner.put()
     return owner
 
   def create_member(
@@ -63,7 +65,8 @@ class UserData(NamedTuple):
         name=self.name,
         email=self.email,
         watchlist=watchlist.key,
-    ).put()
+    )
+    member.put()
     return member
 
   def _email(self) -> str:
@@ -74,8 +77,8 @@ class WatchlistData(NamedTuple):
   id: int
   title: str
   description: str = ''
-  items: Optional[list[int]] = None
-  watched_items: Optional[list[int]] = None
+  items: list[int] = []
+  watched_items: list[int] = []
 
   def create(self) -> db_models.Watchlist:
     watchlist = db_models.Watchlist(
@@ -84,7 +87,8 @@ class WatchlistData(NamedTuple):
         description=self.description,
         items=self.items,
         watched_items=self.watched_items,
-    ).put()
+    )
+    watchlist.put()
     return watchlist
 
 
