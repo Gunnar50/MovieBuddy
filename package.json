@@ -5,6 +5,7 @@
   "author": "Gustavo Passarella",
   "license": "ISC",
   "scripts": {
+    "atf:be": "npm-run-all fix:be:* && npm run test",
     "dev": "concurrently \"npm run webpack:watch\" \"gulp sass-watch\" \"LOCAL_DEV=true poetry run python main.py\" --raw --kill-others",
     "deploy": "gcloud app deploy",
     "webpack:watch": "webpack --watch",
