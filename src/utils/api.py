@@ -35,9 +35,9 @@ class UserWatchlistsInfo(pydantic.BaseModel):
 
 
 class WatchlistCreateRequest(pydantic.BaseModel):
-  name: str
-  owner: str
-  shared: list[int] = []  # List of user_id
+  title: str
+  owner: int  # User profile ID
+  members: list[str] = []  # List of emails
 
 
 class WatchlistUpdateRequest(pydantic.BaseModel):

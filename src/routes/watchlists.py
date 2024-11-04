@@ -63,12 +63,41 @@ def list_all(user_meta: auth.UserMeta) -> api.UserWatchlistsInfo:
   ])
 
 
-@ROUTES.route('/list/<int:watchlist_id>')
+@ROUTES.route('/list/<int:watchlist_id>/')
 @auth.requires_watchlist()
-def list_details(watchlist_meta: auth.WatchlistMeta):
+@flask_helpers.json_handler
+def list_details(watchlist_meta: auth.WatchlistMeta) -> api.WatchlistResponse:
   # Get specific watchlist
   owner = db_models.WatchlistOwner.query(
       db_models.WatchlistOwner.watchlist == watchlist_meta.watchlist).get()
 
   members = db_models.WatchlistMember.query(
       db_models.WatchlistMember.watchlist == watchlist_meta.watchlist).fetch()
+
+  return serialisers.serialise_watchlist_response(
+      watchlist=watchlist_meta.watchlist,
+      owner=owner,
+      members=members,
+  )
+
+
+@ROUTES.route('/list/', methods=('POST',))
+@auth.requires_user
+@flask_helpers.json_handler
+def create_watchlist() -> api.WatchlistResponse:
+  body, _ = flask_helpers.get_parameters(api.WatchlistCreateRequest)
+
+  watchlist = db_models.Watchlist()
+
+  # Get specific watchlist
+  owner = db_models.WatchlistOwner.query(
+      db_models.WatchlistOwner.watchlist == watchlist_meta.watchlist).get()
+
+  members = db_models.WatchlistMember.query(
+      db_models.WatchlistMember.watchlist == watchlist_meta.watchlist).fetch()
+
+  return serialisers.serialise_watchlist_response(
+      watchlist=watchlist,
+      owner=owner,
+      members=members,
+  )
