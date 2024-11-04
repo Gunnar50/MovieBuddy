@@ -78,7 +78,9 @@ class TestAuthDecorators:
       expected_status_code: int,
       test_auth_client: fixtures.TestClientWrapper,
   ):
+    # User is logged in but is not a owner or member of the watchlist
     test_auth_client.login()
+    fixtures.TEST_WATCHLIST1.create()
     response = test_auth_client.get(url)
 
     assert response.status_code == expected_status_code
