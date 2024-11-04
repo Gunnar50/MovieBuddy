@@ -53,8 +53,9 @@ class TestAuthDecorators:
       (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_OWNER, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_ALL, HTTPStatus.FORBIDDEN),
   ])
-  def test_user_nothing(
+  def test_user_logged_out(
       self,
       url: str,
       expected_status_code: int,
@@ -64,20 +65,84 @@ class TestAuthDecorators:
 
     assert response.status_code == expected_status_code
 
-  # @pytest.mark.parametrize('url, expected_status_code', [
-  #     (TEST_URL_USER, HTTPStatus.OK),
-  #     (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
-  #     (TEST_URL_WATCHLIST_OWNER, HTTPStatus.FORBIDDEN),
-  #     (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.FORBIDDEN),
-  # ])
-  # def test_owner_other_watchlist(
-  #     self,
-  #     url: str,
-  #     expected_status_code: int,
-  #     test_auth_client: fixtures.TestClientWrapper,
-  # ):
-  #   test_auth_client.login()
-  #   fixtures.TEST_WATCHLIST1.create()
-  #   response = test_auth_client.get(url)
+  @pytest.mark.parametrize('url, expected_status_code', [
+      (TEST_URL_USER, HTTPStatus.OK),
+      (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_OWNER, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_ALL, HTTPStatus.FORBIDDEN),
+  ])
+  def test_user_logged_in(
+      self,
+      url: str,
+      expected_status_code: int,
+      test_auth_client: fixtures.TestClientWrapper,
+  ):
+    test_auth_client.login()
+    response = test_auth_client.get(url)
 
-  #   assert response.status_code == expected_status_code
+    assert response.status_code == expected_status_code
+
+  @pytest.mark.parametrize('url, expected_status_code', [
+      (TEST_URL_USER, HTTPStatus.OK),
+      (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_OWNER, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_ALL, HTTPStatus.FORBIDDEN),
+  ])
+  def test_user_owns_other_watchlist(
+      self,
+      url: str,
+      expected_status_code: int,
+      test_auth_client: fixtures.TestClientWrapper,
+  ):
+    # User owns watchlist 2 but tries to get watchlist 1
+    test_auth_client.login()
+    watchlist1 = fixtures.TEST_WATCHLIST1.create()
+    watchlist2 = fixtures.TEST_WATCHLIST2.create()
+    fixtures.TEST_USER1.create_owner(watchlist2)
+    response = test_auth_client.get(url)
+
+    assert response.status_code == expected_status_code
+
+  @pytest.mark.parametrize('url, expected_status_code', [
+      (TEST_URL_USER, HTTPStatus.OK),
+      (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_OWNER, HTTPStatus.OK),
+      (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_ALL, HTTPStatus.OK),
+  ])
+  def test_user_watchlist_owner(
+      self,
+      url: str,
+      expected_status_code: int,
+      test_auth_client: fixtures.TestClientWrapper,
+  ):
+    # User own the correct watchlist
+    test_auth_client.login()
+    watchlist = fixtures.TEST_WATCHLIST1.create()
+    fixtures.TEST_USER1.create_owner(watchlist)
+    response = test_auth_client.get(url)
+
+    assert response.status_code == expected_status_code
+
+  @pytest.mark.parametrize('url, expected_status_code', [
+      (TEST_URL_USER, HTTPStatus.OK),
+      (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_OWNER, HTTPStatus.FORBIDDEN),
+      (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.OK),
+      (TEST_URL_WATCHLIST_ALL, HTTPStatus.OK),
+  ])
+  def test_user_watchlist_member(
+      self,
+      url: str,
+      expected_status_code: int,
+      test_auth_client: fixtures.TestClientWrapper,
+  ):
+    # User is a member of the correct watchlist
+    test_auth_client.login()
+    watchlist = fixtures.TEST_WATCHLIST1.create()
+    fixtures.TEST_USER1.create_member(watchlist)
+    response = test_auth_client.get(url)
+
+    assert response.status_code == expected_status_code
