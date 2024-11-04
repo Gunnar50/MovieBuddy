@@ -2,6 +2,7 @@ import collections
 
 import flask
 from google.appengine.ext import ndb
+# pip install appengine-python-standard
 
 from utils import api
 from utils import db_models
@@ -13,7 +14,7 @@ ROUTES = flask.Blueprint('watchlists', __name__, url_prefix='/user/api')
 
 
 @ROUTES.route('/lists/')
-@auth.requires_user
+@auth.requires_any_watchlist
 @flask_helpers.json_handler
 def list_all(user_meta: auth.UserMeta) -> api.UserWatchlistsInfo:
   # Get all watchlists this user own
