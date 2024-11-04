@@ -4,7 +4,6 @@ from typing import Callable, Generator
 from unittest import mock
 
 import flask
-from google.appengine.ext import testbed
 import pytest
 
 from utils import constants
@@ -12,6 +11,7 @@ from utils import fixtures
 from utils.services import auth
 
 TEST_URL_USER = '/test/user/'
+TEST_URL_ANY_WATCHLIST = '/test/any_watchlist/'
 
 TEST_URL_WATCHLIST_NONE = f'/test/requires_list/{fixtures.TEST_WATCHLIST1.id}/none/'
 TEST_URL_WATCHLIST_OWNER = f'/test/requires_list/{fixtures.TEST_WATCHLIST1.id}/owner/'
@@ -30,6 +30,7 @@ def test_auth_client() -> Generator[fixtures.TestClientWrapper, None, None]:
     app.route(url)(decorator(func))
 
   add_route('/test/user/', auth.requires_user)
+  add_route('/test/any_watchlist/', auth.requires_any_watchlist)
 
   add_route('/test/requires_list/<int:watchlist_id>/none/',
             auth.requires_watchlist(user_types=()))
@@ -50,6 +51,7 @@ class TestAuthDecorators:
 
   @pytest.mark.parametrize('url, expected_status_code', [
       (TEST_URL_USER, HTTPStatus.FORBIDDEN),
+      (TEST_URL_ANY_WATCHLIST, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_OWNER, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.FORBIDDEN),
@@ -67,6 +69,7 @@ class TestAuthDecorators:
 
   @pytest.mark.parametrize('url, expected_status_code', [
       (TEST_URL_USER, HTTPStatus.OK),
+      (TEST_URL_ANY_WATCHLIST, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_OWNER, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.FORBIDDEN),
@@ -87,6 +90,7 @@ class TestAuthDecorators:
 
   @pytest.mark.parametrize('url, expected_status_code', [
       (TEST_URL_USER, HTTPStatus.OK),
+      (TEST_URL_ANY_WATCHLIST, HTTPStatus.OK),
       (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_OWNER, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.FORBIDDEN),
@@ -109,6 +113,7 @@ class TestAuthDecorators:
 
   @pytest.mark.parametrize('url, expected_status_code', [
       (TEST_URL_USER, HTTPStatus.OK),
+      (TEST_URL_ANY_WATCHLIST, HTTPStatus.OK),
       (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_OWNER, HTTPStatus.OK),
       (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.FORBIDDEN),
@@ -130,6 +135,7 @@ class TestAuthDecorators:
 
   @pytest.mark.parametrize('url, expected_status_code', [
       (TEST_URL_USER, HTTPStatus.OK),
+      (TEST_URL_ANY_WATCHLIST, HTTPStatus.OK),
       (TEST_URL_WATCHLIST_NONE, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_OWNER, HTTPStatus.FORBIDDEN),
       (TEST_URL_WATCHLIST_MEMBER, HTTPStatus.OK),

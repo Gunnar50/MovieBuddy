@@ -47,6 +47,21 @@ def requires_user(func):
   return inner
 
 
+def requires_any_watchlist(func):
+  # Gets the user_meta, user must be owner or member of a watchlist
+
+  @functools.wraps(func)
+  def inner(*args, **kwargs):
+    user_id = _get_user_id()
+    user_meta = get_user_meta(user_id)
+    if user_meta.has_watchlists:
+      return func(user_meta=user_meta, *args, **kwargs)
+    else:
+      raise exceptions.NoAccessException
+
+  return inner
+
+
 def requires_watchlist(user_types: tuple[UserMetaType, ...] = (
     UserMetaType.OWNER,
     UserMetaType.MEMBER,
