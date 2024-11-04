@@ -20,8 +20,7 @@ class UserMeta:
   id: str
   name: str
   email: str
-  is_owner: bool
-  is_member: bool
+  has_watchlists: bool
 
 
 class UserMetaType(enum.Enum):
@@ -37,7 +36,7 @@ class WatchlistMeta:
 
 
 def requires_user(func):
-  # Gets the user_meta
+  # Gets the user_meta, user must be logged in
 
   @functools.wraps(func)
   def inner(*args, **kwargs):
@@ -105,8 +104,7 @@ def get_user_meta(user_id: Optional[str]) -> UserMeta:
       id=user_id,
       name=user_profile.name,
       email=user_profile.email_address,
-      is_owner=is_owner,
-      is_member=is_member,
+      has_watchlists=is_owner or is_member,
   )
 
 
@@ -114,7 +112,7 @@ def _get_user_type(
     user_meta: UserMeta,
     watchlist: db_models.Watchlist,
 ) -> UserMetaType:
-  if user_meta.is_owner:
+  if user_meta.has_watchlists:
     # Check if this user is a owner of this watchlist
     is_list_owner = db_models.WatchlistOwner.query(
         db_models.WatchlistOwner.email == user_meta.email,
@@ -122,7 +120,6 @@ def _get_user_type(
     if is_list_owner:
       return UserMetaType.OWNER
 
-  if user_meta.is_member:
     # Check if this user is a member of this watchlist
     is_list_member = db_models.WatchlistMember.query(
         db_models.WatchlistMember.email == user_meta.email,
