@@ -1,4 +1,5 @@
 import collections
+import email
 
 import flask
 from google.appengine.ext import ndb
@@ -84,17 +85,29 @@ def list_details(watchlist_meta: auth.WatchlistMeta) -> api.WatchlistResponse:
 @ROUTES.route('/list/', methods=('POST',))
 @auth.requires_user
 @flask_helpers.json_handler
-def create_watchlist() -> api.WatchlistResponse:
+def create_watchlist(user_meta: auth.UserMeta) -> api.WatchlistResponse:
   body, _ = flask_helpers.get_parameters(api.WatchlistCreateRequest)
+  to_put = []
 
-  watchlist = db_models.Watchlist()
+  # Create the watchlist
+  watchlist = db_models.Watchlist(title=body.title,
+                                  description=body.description)
+  to_put.append(watchlist)
 
-  # Get specific watchlist
-  owner = db_models.WatchlistOwner.query(
-      db_models.WatchlistOwner.watchlist == watchlist_meta.watchlist).get()
+  # Create the owner
+  owner = db_models.WatchlistOwner(email=user_meta.email)
+  to_put.append(owner)
 
-  members = db_models.WatchlistMember.query(
-      db_models.WatchlistMember.watchlist == watchlist_meta.watchlist).fetch()
+  # Create the members
+  members = []
+  for email in body.members:
+    member = db_models.WatchlistMember(email=email)
+    members.append(member)
+  to_put.extend(members)
+
+  ndb.put_multi(to_put)
+
+  watchlist.put()
 
   return serialisers.serialise_watchlist_response(
       watchlist=watchlist,
