@@ -52,7 +52,6 @@ class UserData(NamedTuple):
   def create_owner(self,
                    watchlist: db_models.Watchlist) -> db_models.WatchlistOwner:
     owner = db_models.WatchlistOwner(
-        name=self.name,
         email=self.email,
         watchlist=watchlist.key,
     )

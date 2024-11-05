@@ -20,13 +20,11 @@ def serialise_watchlist_response(
   return api.WatchlistResponse(
       watchlist=serialise_watchlist_details(watchlist),
       owner=api.MemberDetail(
-          name=owner.name,
           email=owner.email,
           member_type=api.MemberType.OWNER,
       ),
       members=[
           api.MemberDetail(
-              name=member.name,
               email=member.email,
               member_type=api.MemberType.MEMBER,
           ) for member in sorted_members

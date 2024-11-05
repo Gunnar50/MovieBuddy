@@ -26,12 +26,10 @@ class Watchlist(TrackedModel):
 
 
 class WatchlistOwner(TrackedModel):
-  name = ndb.StringProperty(required=True)
   email = ndb.StringProperty(required=True)
   watchlist = ndb.KeyProperty(Watchlist, required=True)
 
 
 class WatchlistMember(TrackedModel):
-  name = ndb.StringProperty(required=True)
   email = ndb.StringProperty(required=True)
   watchlist = ndb.KeyProperty(Watchlist, required=True)

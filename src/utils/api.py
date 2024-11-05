@@ -13,7 +13,6 @@ class MemberType(enum.Enum):
 
 
 class MemberDetail(pydantic.BaseModel):
-  name: str
   email: str
   member_type: MemberType
 
@@ -36,7 +35,7 @@ class UserWatchlistsInfo(pydantic.BaseModel):
 
 class WatchlistCreateRequest(pydantic.BaseModel):
   title: str
-  owner: int  # User profile ID
+  description: str
   members: list[str] = []  # List of emails
 
 
