@@ -36,6 +36,7 @@ def login():
 
 
 @ROUTES.route('/logout', methods=('POST',))
-def logout() -> str:
+@auth.requires_user
+def logout(user_meta: auth.UserMeta) -> str:
   auth.logout()
   return 'Ok'
