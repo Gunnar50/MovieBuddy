@@ -39,12 +39,14 @@ class UserData(NamedTuple):
   id: int
   email: str
   name: str
+  avatar: Optional[str]
 
   def create_profile(self):
     user_profile = db_models.UserProfile(
         id=self.id,
         email_address=self.email,
         name=self.name,
+        avatar=self.avatar,
     )
     user_profile.put()
     return user_profile
@@ -90,10 +92,22 @@ class WatchlistData(NamedTuple):
     return watchlist
 
 
-TEST_USER1 = UserData(id=100001, email='user_1@example.com', name='User 1')
-TEST_USER2 = UserData(id=100002, email='user_2@example.com', name='User 2')
-TEST_USER3 = UserData(id=100003, email='user_3@example.com', name='User 3')
-TEST_USER4 = UserData(id=100004, email='user_4@example.com', name='User 4')
+TEST_USER1 = UserData(id=100001,
+                      email='user_1@example.com',
+                      name='User 1',
+                      avatar=None)
+TEST_USER2 = UserData(id=100002,
+                      email='user_2@example.com',
+                      name='User 2',
+                      avatar='https://example.com/user_2.png')
+TEST_USER3 = UserData(id=100003,
+                      email='user_3@example.com',
+                      name='User 3',
+                      avatar='https://example.com/user_3.png')
+TEST_USER4 = UserData(id=100004,
+                      email='user_4@example.com',
+                      name='User 4',
+                      avatar=None)
 
 TEST_ITEM_ID1 = 1001
 TEST_ITEM_ID2 = 1002
