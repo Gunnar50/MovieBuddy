@@ -216,3 +216,19 @@ def test_client() -> Generator[TestClientWrapper, None, None]:
   import main
   with main.app.test_client() as test_client:
     yield TestClientWrapper(test_client)
+
+
+def assert_response_object(
+    response: flask.Response,
+    expected_object: pydantic.BaseModel,
+    status_code: HTTPStatus = HTTPStatus.OK,
+) -> None:
+  assert response.status_code == status_code
+  model = type(expected_object)
+  response_json = response.get_json()
+
+  if not isinstance(response_json, dict):
+    raise ValueError('Response JSON is not a valid mapping')
+
+  response_object = model(**response_json)
+  assert response_object == expected_object
