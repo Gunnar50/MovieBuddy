@@ -4,19 +4,13 @@ import pydantic
 
 
 class UserDetails(pydantic.BaseModel):
-  user_id: str
+  user_id: int
   email: str
   name: str
 
 
 class LoginRequest(pydantic.BaseModel):
   access_token: str
-
-
-class LoginResponse(pydantic.BaseModel):
-  user: UserDetails
-  has_invite: bool
-  has_profile: bool
 
 
 class MemberType(enum.Enum):
