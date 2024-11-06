@@ -14,7 +14,7 @@ from utils.services import serialisers
 ROUTES = flask.Blueprint('watchlists', __name__, url_prefix='/user/api')
 
 
-@ROUTES.route('/lists/')
+@ROUTES.route('/watchlists/')
 @auth.requires_any_watchlist
 @flask_helpers.json_handler
 def list_all(user_meta: auth.UserMeta) -> api.UserWatchlistsInfo:
@@ -64,7 +64,7 @@ def list_all(user_meta: auth.UserMeta) -> api.UserWatchlistsInfo:
   ])
 
 
-@ROUTES.route('/list/<int:watchlist_id>/')
+@ROUTES.route('/watchlist/<int:watchlist_id>/')
 @auth.requires_watchlist()
 @flask_helpers.json_handler
 def list_details(watchlist_meta: auth.WatchlistMeta) -> api.WatchlistResponse:
@@ -82,7 +82,7 @@ def list_details(watchlist_meta: auth.WatchlistMeta) -> api.WatchlistResponse:
   )
 
 
-@ROUTES.route('/list/', methods=('POST',))
+@ROUTES.route('/watchlist/', methods=('POST',))
 @auth.requires_user
 @flask_helpers.json_handler
 def create_watchlist(user_meta: auth.UserMeta) -> api.WatchlistResponse:
