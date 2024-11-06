@@ -173,7 +173,7 @@ def login(token: str) -> UserInfo:
                          avatar=id_info.get('picture'))
     return user_info
   except Exception:
-    raise exceptions.EntityNotFoundException
+    raise exceptions.InvalidAuthenticationException
 
 
 def logout() -> None:
