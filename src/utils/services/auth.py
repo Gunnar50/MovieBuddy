@@ -148,7 +148,7 @@ def _get_user_type(
 
 @dataclasses.dataclass
 class UserInfo:
-  google_id: str
+  google_id: int
   email_address: str
   name: str
   avatar: Optional[str]
