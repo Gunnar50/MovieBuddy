@@ -61,7 +61,6 @@ class UserData(NamedTuple):
   def create_member(
       self, watchlist: db_models.Watchlist) -> db_models.WatchlistMember:
     member = db_models.WatchlistMember(
-        name=self.name,
         email=self.email,
         watchlist=watchlist.key,
     )
