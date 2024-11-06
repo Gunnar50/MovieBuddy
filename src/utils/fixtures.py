@@ -18,6 +18,8 @@ from utils import constants
 from utils import db_models
 from utils.services import secrets
 
+TEST_ACCESS_TOKEN = 'test-jwt-token'
+
 
 @pytest.fixture(autouse=True)
 def mock_oauth_config(mocker: pytest_mock.MockerFixture) -> None:
@@ -33,6 +35,24 @@ def mock_oauth_config(mocker: pytest_mock.MockerFixture) -> None:
           'javascript_origins': ['http://localhost:8080'],
       }
   })
+
+
+@pytest.fixture()
+def mock_verify_token(mocker: pytest_mock.MockerFixture) -> dict:
+  id_info = {
+      'sub': TEST_USER1.id,
+      'email': TEST_USER1.email,
+      'name': TEST_USER1.name,
+      'picture': TEST_USER1.avatar,
+  }
+
+  def verify_token(access_token, *args, **kwargs):
+    assert TEST_ACCESS_TOKEN == access_token
+    return id_info
+
+  mocker.patch.object(id_token, 'verify_token', wraps=verify_token)
+
+  return id_info
 
 
 class UserData(NamedTuple):
