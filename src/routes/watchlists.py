@@ -88,6 +88,7 @@ def list_details(watchlist_meta: auth.WatchlistMeta) -> api.WatchlistResponse:
 def create_watchlist(user_meta: auth.UserMeta) -> api.WatchlistResponse:
   body, _ = flask_helpers.get_parameters(api.WatchlistCreateRequest)
   to_put = []
+
   # Create the watchlist
   watchlist = db_models.Watchlist(
       title=body.title,
@@ -101,10 +102,11 @@ def create_watchlist(user_meta: auth.UserMeta) -> api.WatchlistResponse:
   to_put.append(owner)
 
   # Create the members
-  members = []
-  for email in body.members:
-    member = db_models.WatchlistMember(email=email, watchlist=watchlist.key)
-    members.append(member)
+  # TODO - Add limit of members per watchlist?
+  members = [
+      db_models.WatchlistMember(email=email, watchlist=watchlist.key)
+      for email in body.members
+  ]
   to_put.extend(members)
 
   ndb.put_multi(to_put)

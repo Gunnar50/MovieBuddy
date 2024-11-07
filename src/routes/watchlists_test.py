@@ -18,7 +18,7 @@ class TestCreateWatchlist:
     payload = api.WatchlistCreateRequest(
         title=fixtures.TEST_WATCHLIST1.title,
         description=fixtures.TEST_WATCHLIST1.description,
-        members=[fixtures.TEST_USER2.email],
+        members=[fixtures.TEST_USER2.email, fixtures.TEST_USER3.email],
     )
 
     expected_response = api.WatchlistResponse(
@@ -30,6 +30,8 @@ class TestCreateWatchlist:
                                member_type=api.MemberType.OWNER),
         members=[
             api.MemberDetail(email=fixtures.TEST_USER2.email,
+                             member_type=api.MemberType.MEMBER),
+            api.MemberDetail(email=fixtures.TEST_USER3.email,
                              member_type=api.MemberType.MEMBER)
         ],
     )
@@ -37,4 +39,3 @@ class TestCreateWatchlist:
     response = test_client.post(self.URL, data=payload.model_dump(mode='json'))
 
     fixtures.assert_response_object(response, expected_response)
-
