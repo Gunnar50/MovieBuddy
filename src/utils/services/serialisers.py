@@ -5,7 +5,6 @@ from utils import db_models
 def serialise_watchlist_details(
     watchlist: db_models.Watchlist) -> api.WatchlistDetail:
   return api.WatchlistDetail(
-      watchlist_id=watchlist.key.id(),
       title=watchlist.title,
       description=watchlist.description,
   )

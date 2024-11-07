@@ -24,7 +24,6 @@ class MemberDetail(pydantic.BaseModel):
 
 
 class WatchlistDetail(pydantic.BaseModel):
-  watchlist_id: int
   title: str
   description: str
 
