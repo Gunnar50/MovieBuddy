@@ -222,13 +222,21 @@ def assert_response_object(
     response: flask.Response,
     expected_object: pydantic.BaseModel,
     status_code: HTTPStatus = HTTPStatus.OK,
+    ignore_keys: Optional[list[str]] = None,
 ) -> None:
   assert response.status_code == status_code
   model = type(expected_object)
-  response_json = response.get_json()
 
+  # Ensure the response is valid dict
+  response_json = response.get_json()
   if not isinstance(response_json, dict):
     raise ValueError('Response JSON is not a valid mapping')
 
   response_object = model(**response_json)
+
+  # Ignore values by copying from response_object to expected_object
+  for ignore_key in ignore_keys or []:
+    value = getattr(response_object, ignore_key)
+    setattr(expected_object, ignore_key, value)
+
   assert response_object == expected_object
