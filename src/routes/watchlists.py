@@ -82,32 +82,32 @@ def list_details(watchlist_meta: auth.WatchlistMeta) -> api.WatchlistResponse:
   )
 
 
-@ROUTES.route('/watchlist/', methods=('POST',))
+@ROUTES.route('/watchlist/create/', methods=('POST',))
 @auth.requires_user
 @flask_helpers.json_handler
 def create_watchlist(user_meta: auth.UserMeta) -> api.WatchlistResponse:
   body, _ = flask_helpers.get_parameters(api.WatchlistCreateRequest)
   to_put = []
-
   # Create the watchlist
-  watchlist = db_models.Watchlist(title=body.title,
-                                  description=body.description)
-  to_put.append(watchlist)
+  watchlist = db_models.Watchlist(
+      title=body.title,
+      description=body.description,
+  )
+  watchlist.put()
 
   # Create the owner
-  owner = db_models.WatchlistOwner(email=user_meta.email)
+  owner = db_models.WatchlistOwner(email=user_meta.email,
+                                   watchlist=watchlist.key)
   to_put.append(owner)
 
   # Create the members
   members = []
   for email in body.members:
-    member = db_models.WatchlistMember(email=email)
+    member = db_models.WatchlistMember(email=email, watchlist=watchlist.key)
     members.append(member)
   to_put.extend(members)
 
   ndb.put_multi(to_put)
-
-  watchlist.put()
 
   return serialisers.serialise_watchlist_response(
       watchlist=watchlist,
