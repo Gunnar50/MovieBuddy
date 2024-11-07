@@ -67,13 +67,15 @@ def list_all(user_meta: auth.UserMeta) -> api.UserWatchlistsInfo:
 @ROUTES.route('/watchlist/<int:watchlist_id>/')
 @auth.requires_watchlist()
 @flask_helpers.json_handler
-def list_details(watchlist_meta: auth.WatchlistMeta) -> api.WatchlistResponse:
+def list_details(watchlist_meta: auth.WatchlistMeta,
+                 **kwargs) -> api.WatchlistResponse:
   # Get specific watchlist
   owner = db_models.WatchlistOwner.query(
-      db_models.WatchlistOwner.watchlist == watchlist_meta.watchlist).get()
+      db_models.WatchlistOwner.watchlist == watchlist_meta.watchlist.key).get()
 
   members = db_models.WatchlistMember.query(
-      db_models.WatchlistMember.watchlist == watchlist_meta.watchlist).fetch()
+      db_models.WatchlistMember.watchlist ==
+      watchlist_meta.watchlist.key).fetch()
 
   return serialisers.serialise_watchlist_response(
       watchlist=watchlist_meta.watchlist,
