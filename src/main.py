@@ -18,8 +18,10 @@ def create_app() -> flask.Flask:
 def register_routes(flask_app: flask.Flask):
   from routes import auth
   from routes import general
+  from routes import watchlists
 
   flask_app.register_blueprint(general.ROUTES)
+  flask_app.register_blueprint(watchlists.ROUTES)
   flask_app.register_blueprint(auth.ROUTES)
 
 
