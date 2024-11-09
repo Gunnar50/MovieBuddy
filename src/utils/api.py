@@ -1,4 +1,5 @@
 import enum
+from typing import Optional
 
 import pydantic
 
@@ -52,5 +53,11 @@ class WatchlistRequest(pydantic.BaseModel):
   item_id: int
 
 
-class MovieDetails(pydantic.BaseModel):
-  pass
+class WatchlistItemRequest(pydantic.BaseModel):
+  id: int
+  title: str
+  overview: str
+  poster_path: Optional[str]
+  genre_ids: list[int]
+  release_date: Optional[str] = None
+  first_air_date: Optional[str] = None

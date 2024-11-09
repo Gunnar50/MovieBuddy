@@ -118,3 +118,17 @@ def create_watchlist(user_meta: auth.UserMeta) -> api.WatchlistResponse:
       owner=owner,
       members=members,
   )
+
+
+@ROUTES.route('/watchlist/<int:watchlist_id>/add/')
+@auth.requires_watchlist()
+@flask_helpers.json_handler
+def add_item(watchlist_meta: auth.WatchlistMeta, **kwargs):
+  body, _ = flask_helpers.get_parameters(api.WatchlistItemRequest)
+
+
+@ROUTES.route('/watchlists/<int:watchlist_id>/remove/')
+@auth.requires_any_watchlist
+@flask_helpers.json_handler
+def remove_item(watchlist_meta: auth.WatchlistMeta, **kwargs):
+  pass
