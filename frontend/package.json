@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "build": "ng build",
+    "fix": "npm-run-all fix:*",
     "fix:html": "prettier 'src/**/*.html' --write",
+    "fix:scss": "stylelint 'src/**/*.scss' --fix",
+    "fix:ts": "gts fix 'src/**/*.ts'",
     "start": "ng serve",
     "ng": "ng",
     "watch": "ng build --watch --configuration development",
