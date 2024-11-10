@@ -8,4 +8,4 @@ set -o pipefail  # Trace ERR through pipes
 set -o errtrace  # Trace ERR through sub-shell commands
 
 # Check/fix the code styles
-./scripts/poetry_run.sh yapf --parallel -vv -r ./ $@
+../scripts/poetry_run.sh yapf --parallel -vv -r ./ $@

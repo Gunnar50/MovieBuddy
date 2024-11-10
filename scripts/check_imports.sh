@@ -8,4 +8,4 @@ set -o pipefail  # Trace ERR through pipes
 set -o errtrace  # Trace ERR through sub-shell commands
 
 # Check/fix the imports
-./scripts/poetry_run.sh isort . --skip .pytype $@
+../scripts/poetry_run.sh isort . --skip .pytype $@
