@@ -44,7 +44,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "ionom",
+            "prefix": "app",
             "style": "camelCase"
           }
         ],
@@ -52,7 +52,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "ionom",
+            "prefix": "app",
             "style": "kebab-case"
           }
         ]
