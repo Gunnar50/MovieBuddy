@@ -1,0 +1,70 @@
+{
+  // Extend standard GTS config
+  "extends": "./node_modules/gts/",
+
+  // Import ordering
+  "plugins": ["eslint-plugin-import"],
+  "parser": "@typescript-eslint/parser",
+  "ignorePatterns": ["static", "projects/**/*"],
+  "rules": {
+    "import/order": [
+      "error",
+      {
+        "groups": ["external", "builtin", "internal"],
+        "pathGroups": [
+          {
+            "pattern": "@/**",
+            "group": "builtin",
+            "position": "before"
+          }
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "no-console": ["error", {"allow": ["debug", "error", "info", "warn"]}]
+  },
+  // @angular-eslint
+  "root": true,
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:@ngrx/all"
+      ],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "ionom",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "ionom",
+            "style": "kebab-case"
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended",
+        "plugin:@angular-eslint/template/accessibility"
+      ],
+      "rules": {}
+    }
+  ]
+}
