@@ -15,5 +15,10 @@ export const getUser = createAction(`${USER_TAG} Get user`);
 
 export const createUser = createAction(
   `${USER_TAG} Create user`,
-  props<{credentials: string; id: string}>(),
+  props<{credential: string; googleId: string}>(),
+);
+
+export const backendLogin = createAction(
+  `${USER_TAG} Backend user login`,
+  props<{credential: string}>(),
 );
