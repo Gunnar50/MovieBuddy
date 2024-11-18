@@ -16,9 +16,9 @@ def warmup() -> str:
 
 @ROUTES.route('/api/config')
 @flask_helpers.json_handler
-def get_config() -> api.Config:
+def get_config() -> api.ConfigResponse:
   client_id = auth.get_client_id()
-  return api.Config(client_id=client_id)
+  return api.ConfigResponse(client_id=client_id)
 
 
 @ROUTES.route("/logged_in")

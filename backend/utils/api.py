@@ -4,7 +4,7 @@ from typing import Optional
 import pydantic
 
 
-class Config(pydantic.BaseModel):
+class ConfigResponse(pydantic.BaseModel):
   client_id: str
 
 
