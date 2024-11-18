@@ -1,7 +1,9 @@
 import flask
 
 from utils import db_models
+from utils import api
 from utils.services import auth
+from utils.services import flask_helpers
 
 ROUTES = flask.Blueprint('general', __name__)
 
@@ -12,10 +14,11 @@ def warmup() -> str:
   return 'Warmup complete!'
 
 
-@ROUTES.route('/')
-def home() -> str:
+@ROUTES.route('/api/config')
+@flask_helpers.json_handler
+def get_config() -> api.Config:
   client_id = auth.get_client_id()
-  return flask.render_template('login.html', client_id=client_id)
+  return api.Config(client_id=client_id)
 
 
 @ROUTES.route("/logged_in")

@@ -4,6 +4,10 @@ from typing import Optional
 import pydantic
 
 
+class Config(pydantic.BaseModel):
+  client_id: str
+
+
 class UserDetails(pydantic.BaseModel):
   user_id: int
   email: str
