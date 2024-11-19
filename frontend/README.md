@@ -25,3 +25,36 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## To add new components:
+
+Create them as standalone components:
+
+```typescript
+// components/login/login.component.ts
+import {Component} from '@angular/core';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss',
+  standalone: true,
+})
+export class LoginComponent {}
+```
+
+Add them to the routes:
+
+```typescript
+export const routes: Routes = [
+  {path: '', redirectTo: LOGIN_PATH, pathMatch: 'full'},
+  {
+    path: LOGIN_PATH,
+    loadComponent: () =>
+      import('./components/login/login.component').then(
+        (m) => m.LoginComponent,
+      ),
+  },
+  // Add more routes as needed
+];
+```
