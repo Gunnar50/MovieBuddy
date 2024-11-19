@@ -24,8 +24,10 @@ export class ConfigService {
     return this.config;
   }
 
-  async getGoogleClientId() {
-    const config = await this.loadConfig();
-    return config.clientId;
+  getGoogleClientId() {
+    if (!this.config) {
+      throw new Error('Config is not loaded');
+    }
+    return this.config.clientId;
   }
 }

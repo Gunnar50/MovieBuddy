@@ -28,7 +28,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  loadClient(): Promise<void> {
+  loadGoogleScript(): Promise<void> {
     return new Promise((resolve) => {
       const clientScriptTag = document.createElement('script');
       document.getElementsByTagName('head')[0].appendChild(clientScriptTag);
@@ -37,18 +37,24 @@ export class AuthService {
     });
   }
 
-  async createGoogleButton(
+  async loadClient(): Promise<void> {
+    await Promise.all([
+      this.loadGoogleScript(),
+      this.configService.loadConfig(),
+    ]);
+  }
+
+  createGoogleButton(
     wrapperElement: HTMLElement,
     buttonType: GoogleButtonType,
   ) {
-    const clientId = await this.configService.getGoogleClientId();
-
-    if (!clientId) return;
-
     if (!window?.google?.accounts?.id) {
       console.error('Cannot access Google account on window object');
       return;
     }
+
+    const clientId = this.configService.getGoogleClientId();
+    if (!clientId) return;
 
     const googleBtnCallback =
       buttonType === 'signUp'
