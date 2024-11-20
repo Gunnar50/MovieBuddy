@@ -12,7 +12,7 @@ interface GoogleAuthResponse {
   select_by?: string;
 }
 
-type GoogleButtonType = 'signIn' | 'signUp';
+export type GoogleButtonType = 'signIn' | 'signUp';
 
 /**
  * URL of the Sign In With Google client library:
@@ -24,7 +24,7 @@ export const GSI_CLIENT_URL = 'https://accounts.google.com/gsi/client';
 export class AuthService {
   constructor(
     @Inject(DOCUMENT) protected readonly document: Document,
-    private readonly store: Store,
+    // private readonly store: Store,
     private configService: ConfigService,
   ) {}
 
@@ -77,16 +77,16 @@ export class AuthService {
 
   private handleSignIn(response: GoogleAuthResponse) {
     localStorage.setItem(CREDENTIALS_KEY, response.credential);
-    this.store.dispatch(
-      actions.backendLogin({credential: response.credential}),
-    );
+    // this.store.dispatch(
+    //   actions.backendLogin({credential: response.credential}),
+    // );
   }
 
   private handleSignUp(response: GoogleAuthResponse) {
     localStorage.setItem(CREDENTIALS_KEY, response.credential);
     const googleId = localStorage.getItem(GOOGLE_ID) || '';
-    this.store.dispatch(
-      actions.createUser({credential: response.credential, googleId}),
-    );
+    // this.store.dispatch(
+    //   actions.createUser({credential: response.credential, googleId}),
+    // );
   }
 }
