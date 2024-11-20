@@ -14,6 +14,12 @@ def warmup() -> str:
   return 'Warmup complete!'
 
 
+@ROUTES.route('/', strict_slashes=False)
+@ROUTES.route('/<path:path>')
+def catch_all(path: str = ''):
+  return flask.render_template('dist/browser/index.html')
+
+
 @ROUTES.route('/api/config')
 @flask_helpers.json_handler
 def get_config() -> api.ConfigResponse:

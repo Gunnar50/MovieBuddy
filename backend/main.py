@@ -7,11 +7,16 @@ from utils import constants
 
 
 def create_app() -> flask.Flask:
-  flask_app = flask.Flask(__name__,
-                          template_folder='src/templates',
-                          static_folder='src/static/compiled')
+  flask_app = flask.Flask(
+      __name__,
+      template_folder='.',
+      static_folder='dist/browser',
+  )
+  # Ensure auto-escaping is always enabled
+  flask_app.jinja_env.autoescape = True
   flask_app.wsgi_app = wrap_wsgi_app(flask_app.wsgi_app)
   flask_app.secret_key = os.urandom(24)
+
   return flask_app
 
 
