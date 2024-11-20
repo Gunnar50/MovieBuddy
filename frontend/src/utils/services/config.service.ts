@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
 
-import {ConfigResponse} from '../typings/custom.models';
+import {ConfigResponse} from '../../typings/models';
 
 export const CONFIG_ENDPOINT = '/api/config';
 
