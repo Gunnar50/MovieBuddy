@@ -10,6 +10,7 @@
     "start": "ng serve",
     "ng": "ng",
     "watch": "ng build --watch --configuration development",
+    "watch:dev": "ng build --watch --configuration development --delete-output-path --output-path ../backend/dist/",
     "test": "ng test"
   },
   "private": true,
