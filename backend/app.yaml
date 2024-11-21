@@ -19,16 +19,22 @@ env_variables:
   FLASK_SETTINGS_FILENAME: "settings.py"
 
 handlers:
-  # This configures Google App Engine to serve the files in the app's static
-  # directory.
-- url: /static
-  static_dir: /src/static
+  - url: /static
+    secure: always
+    expiration: 365d
+    static_dir: static/
 
-  # This handler routes all requests not caught above to your main app. It is
-  # required when static routes are defined, but can be omitted (along with
-  # the entire handlers section) when there are no static files defined.
-- url: /.*
-  script: auto
+  # Static files
+  - url: /(.*\.(js|css|ico))
+    secure: always
+    expiration: 365d
+    static_files: dist/browser/\1
+    upload: dist/browser/.*
+
+  # All other routes go to index.html
+  - url: /.*
+    secure: always
+    script: auto
 
 automatic_scaling:
   min_instances: 0
