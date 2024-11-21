@@ -9,8 +9,9 @@ from utils import constants
 def create_app() -> flask.Flask:
   flask_app = flask.Flask(
       __name__,
-      template_folder='.',
+      template_folder='dist/browser',
       static_folder='dist/browser',
+      static_url_path='',
   )
   # Ensure auto-escaping is always enabled
   flask_app.jinja_env.autoescape = True
