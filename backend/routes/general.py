@@ -17,14 +17,18 @@ def warmup() -> str:
 @ROUTES.route('/', strict_slashes=False)
 @ROUTES.route('/<path:path>')
 def catch_all(path: str = ''):
-  return flask.render_template('dist/browser/index.html')
+  return flask.render_template('index.html')
 
 
 @ROUTES.route('/api/config')
 @flask_helpers.json_handler
 def get_config() -> api.ConfigResponse:
-  client_id = auth.get_client_id()
-  return api.ConfigResponse(client_id=client_id)
+  try:
+    client_id = auth.get_client_id()
+    return api.ConfigResponse(client_id=client_id)
+  except Exception as e:
+    print(f'ERROR: {e}')
+    return flask.jsonify({'error': str(e)}), 500
 
 
 @ROUTES.route("/logged_in")
