@@ -5,6 +5,9 @@
 *.pyc
 .idea/
 
+# Types are generated locally
+/frontend/src/typings/models.ts
+
 # Node/npm files to ignore.
 node_modules
 npm-debug.log
@@ -28,3 +31,5 @@ npm-debug.log*
 
 # Service account credentials for Budou filter to run/build site locally.
 budou-credentials.json
+
+/backend/dist
