@@ -13,7 +13,9 @@ export const CONFIG_ENDPOINT = '/api/config';
 export class ConfigService {
   private config: ConfigResponse | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log('ConfigService constructed');
+  }
 
   async loadConfig(): Promise<ConfigResponse> {
     if (!this.config) {
@@ -28,6 +30,6 @@ export class ConfigService {
     if (!this.config) {
       throw new Error('Config is not loaded');
     }
-    return this.config.clientId;
+    return this.config.client_id;
   }
 }

@@ -25,13 +25,18 @@ export class GoogleSignInButtonComponent {
 
   constructor(private readonly authService: AuthService) {
     effect(() => {
-      const signInButtonElement = this.signInButtonElement()?.nativeElement;
+      try {
+        const signInButtonElement = this.signInButtonElement()?.nativeElement;
+        console.log('Sign in button element:', signInButtonElement);
 
-      if (signInButtonElement) {
-        this.authService.createGoogleButton(
-          signInButtonElement,
-          this.googleButtonType(),
-        );
+        if (signInButtonElement) {
+          this.authService.createGoogleButton(
+            signInButtonElement,
+            this.googleButtonType(),
+          );
+        }
+      } catch (error) {
+        console.error('Error in Google Sign In button effect:', error);
       }
     });
   }

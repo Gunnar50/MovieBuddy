@@ -9,11 +9,23 @@ import {provideStoreDevtools} from '@ngrx/store-devtools';
 
 import {routes} from './app.routes';
 import {AuthService} from '../utils/services/auth.service';
+import {ConfigService} from '../utils/services/config.service';
 
 export function resolveGoogleAuthClient(authService: AuthService) {
-  return () => authService.loadClient();
+  return async () => {
+    console.log('APP_INITIALIZER: Starting Google client initialization');
+    try {
+      await authService.loadClient();
+      console.log('APP_INITIALIZER: Google client initialized successfully');
+    } catch (error) {
+      console.error(
+        'APP_INITIALIZER: Failed to initialize Google client:',
+        error,
+      );
+      throw error; // This will prevent the app from loading if initialization fails
+    }
+  };
 }
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(),
@@ -24,10 +36,8 @@ export const appConfig: ApplicationConfig = {
       logOnly: true,
       autoPause: true,
     }),
-    {
-      provide: AuthService,
-      useClass: AuthService,
-    },
+    ConfigService,
+    AuthService,
     {
       provide: APP_INITIALIZER,
       useFactory: resolveGoogleAuthClient,
