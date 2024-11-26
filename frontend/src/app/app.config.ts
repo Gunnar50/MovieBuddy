@@ -5,9 +5,11 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import {provideRouter} from '@angular/router';
+import {provideStore} from '@ngrx/store';
 import {provideStoreDevtools} from '@ngrx/store-devtools';
 
 import {routes} from './app.routes';
+import {userReducer} from '../user/user.reducers';
 import {AuthService} from '../utils/services/auth.service';
 import {ConfigService} from '../utils/services/config.service';
 
@@ -30,6 +32,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
+    provideStore(userReducer),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: true,
