@@ -13,16 +13,15 @@ import {ConfigService} from '../utils/services/config.service';
 
 export function resolveGoogleAuthClient(authService: AuthService) {
   return async () => {
-    console.log('APP_INITIALIZER: Starting Google client initialization');
     try {
       await authService.loadClient();
-      console.log('APP_INITIALIZER: Google client initialized successfully');
     } catch (error) {
       console.error(
         'APP_INITIALIZER: Failed to initialize Google client:',
         error,
       );
-      throw error; // This will prevent the app from loading if initialization fails
+      // This will prevent the app from loading if initialization fails
+      throw error;
     }
   };
 }
