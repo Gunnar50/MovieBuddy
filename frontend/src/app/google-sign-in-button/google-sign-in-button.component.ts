@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   effect,
   ElementRef,
   input,
@@ -27,7 +26,6 @@ export class GoogleSignInButtonComponent {
     effect(() => {
       try {
         const signInButtonElement = this.signInButtonElement()?.nativeElement;
-        console.log('Sign in button element:', signInButtonElement);
 
         if (signInButtonElement) {
           this.authService.createGoogleButton(
