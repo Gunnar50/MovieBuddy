@@ -39,12 +39,10 @@ export class AuthService {
 
   async loadClient(): Promise<void> {
     try {
-      console.log('Loading Google client...');
       await Promise.all([
         this.loadGoogleScript(),
         this.configService.loadConfig(),
       ]);
-      console.log('Google client loaded successfully');
     } catch (error) {
       console.error('Failed to load Google client:', error);
       throw error;
