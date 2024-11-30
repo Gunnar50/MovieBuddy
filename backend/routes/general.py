@@ -20,6 +20,22 @@ def catch_all(path: str = ''):
   return flask.render_template('index.html')
 
 
+def report_error(message: str):
+  from google.cloud import error_reporting
+
+  client = error_reporting.Client()
+  client.report(message)
+
+
+@ROUTES.route('/test-error', strict_slashes=False)
+def error_reporting():
+  try:
+    raise Exception("Something went wrong")
+  except Exception as ex:
+    report_error(f'ERROR: This is a message from test-error API. {ex}')
+  return 'Done testing.'
+
+
 @ROUTES.route('/api/config')
 @flask_helpers.json_handler
 def get_config() -> api.ConfigResponse:
